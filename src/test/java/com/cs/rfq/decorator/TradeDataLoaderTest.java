@@ -24,6 +24,7 @@ public class TradeDataLoaderTest extends AbstractSparkUnitTest {
 
     @Test
     public void loadTradeRecords() {
+        trades.show();
         assertEquals(5, trades.count());
     }
 
