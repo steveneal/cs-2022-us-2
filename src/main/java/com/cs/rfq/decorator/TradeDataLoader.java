@@ -4,9 +4,7 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.Metadata;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
+import org.apache.spark.sql.types.*;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +17,35 @@ public class TradeDataLoader {
 
     public Dataset<Row> loadTrades(SparkSession session, String path) {
         //TODO: create an explicit schema for the trade data in the JSON files
-        StructType schema = null;
+        StructType schema = new StructType(new StructField[]{
+                DataTypes.createStructField("TraderId", LongType,false),
+                DataTypes.createStructField("EntityId", LongType,false),
+                DataTypes.createStructField("MsgType", IntegerType,false),
+                DataTypes.createStructField("TradeReportId", LongType,false),
+                DataTypes.createStructField("PreviouslyReported", StringType,false),
+                DataTypes.createStructField("SecurityID", StringType,false),
+                DataTypes.createStructField("SecurityIdSource", IntegerType,false),
+                DataTypes.createStructField("LastQty", LongType,false),
+                DataTypes.createStructField("LastPx", DoubleType,false),
+                DataTypes.createStructField("TradeDate", StringType,false),
+                DataTypes.createStructField("TransactTime", StringType,false),
+                DataTypes.createStructField("NoSides", IntegerType,false),
+                DataTypes.createStructField("Side", IntegerType,false),
+                DataTypes.createStructField("OrderID", LongType,false),
+                DataTypes.createStructField("Currency", StringType,false),
+
+
+        });
+
 
         //TODO: load the trades dataset
-        Dataset<Row> trades = null;
+        Dataset<Row> trades =  session.read()
+                .schema(schema)
+                .json(path);
+
 
         //TODO: log a message indicating number of records loaded and the schema used
-
+        log.info("loaded number: "+ trades.count()+ "; schema used: "+ schema);
         return trades;
     }
 

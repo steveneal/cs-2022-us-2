@@ -18,7 +18,17 @@ public class Rfq implements Serializable {
 
     public static Rfq fromJson(String json) {
         //TODO: build a new RFQ setting all fields from data passed in the RFQ json message
-        return null;
+        Rfq newRfq= new Rfq();
+        Type t = new TypeToken<Map<String, String>>() {}.getType();
+        Map<String, String> fields = new Gson().fromJson(json, t);
+        newRfq.setId(fields.get("id"));
+        newRfq.setIsin(fields.get("instrumentId"));
+        newRfq.setTraderId(Long.parseLong(fields.get("traderId")));
+        newRfq.setEntityId(Long.parseLong(fields.get("entityId")));
+        newRfq.setQuantity(Long.parseLong(fields.get("qty")));
+        newRfq.setPrice(Double.parseDouble(fields.get("price")));
+        newRfq.setSide(fields.get("side"));
+        return newRfq;
     }
 
     @Override
