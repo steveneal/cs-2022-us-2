@@ -6,6 +6,7 @@ import com.cs.rfq.decorator.extractors.TotalTradesWithEntityExtractor;
 import com.cs.rfq.decorator.extractors.VolumeTradedWithEntityYTDExtractor;
 import com.cs.rfq.decorator.publishers.MetadataJsonLogPublisher;
 import com.cs.rfq.decorator.publishers.MetadataPublisher;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -39,7 +40,7 @@ public class RfqProcessor {
 
         //TODO: use the TradeDataLoader to load the trade data archives
         TradeDataLoader loader = new TradeDataLoader();
-        String filePath = getClass().getResource("loader-test-trades.json").getPath();
+        String filePath = "src/test/resources/trades/trades.json";
         trades = loader.loadTrades(session, filePath);
 
         //TODO: take a close look at how these two extractors are implemented
@@ -51,8 +52,7 @@ public class RfqProcessor {
         //TODO: stream data from the input socket on localhost:9000
         JavaDStream<String> lines = streamingContext.socketTextStream("localhost", 9000);
         //TODO: convert each incoming line to a Rfq object and call processRfq method with it
-        Rfq rfq = Rfq.fromJson(lines.toString());
-        processRfq(rfq);
+        lines.foreachRDD(rdd -> rdd.collect().forEach(line -> processRfq(Rfq.fromJson(line))));
         //TODO: start the streaming context
         streamingContext.start();
         streamingContext.awaitTermination();

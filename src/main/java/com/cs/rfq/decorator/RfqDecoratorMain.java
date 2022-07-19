@@ -17,6 +17,7 @@ public class RfqDecoratorMain {
         //TODO: create a Spark streaming context
         JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
 
+
         //TODO: create a Spark session
         SparkSession session = SparkSession.builder().config(conf).getOrCreate();
 
