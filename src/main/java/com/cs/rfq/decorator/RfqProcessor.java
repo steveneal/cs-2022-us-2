@@ -15,10 +15,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.spark.sql.functions.sum;
 
@@ -41,6 +38,9 @@ public class RfqProcessor {
         this.streamingContext = streamingContext;
 
         //TODO: use the TradeDataLoader to load the trade data archives
+        TradeDataLoader loader = new TradeDataLoader();
+        String filePath = getClass().getResource("loader-test-trades.json").getPath();
+        trades = loader.loadTrades(session, filePath);
 
         //TODO: take a close look at how these two extractors are implemented
         extractors.add(new TotalTradesWithEntityExtractor());
@@ -49,10 +49,13 @@ public class RfqProcessor {
 
     public void startSocketListener() throws InterruptedException {
         //TODO: stream data from the input socket on localhost:9000
-
+        JavaDStream<String> lines = streamingContext.socketTextStream("localhost", 9000);
         //TODO: convert each incoming line to a Rfq object and call processRfq method with it
-
+        Rfq rfq = Rfq.fromJson(lines.toString());
+        processRfq(rfq);
         //TODO: start the streaming context
+        streamingContext.start();
+        streamingContext.awaitTermination();
     }
 
     public void processRfq(Rfq rfq) {
@@ -62,7 +65,15 @@ public class RfqProcessor {
         Map<RfqMetadataFieldNames, Object> metadata = new HashMap<>();
 
         //TODO: get metadata from each of the extractors
+        RfqMetadataExtractor totalExtractor = new TotalTradesWithEntityExtractor();
+        RfqMetadataExtractor volumeExtractor = new TotalTradesWithEntityExtractor();
+
+        Map<RfqMetadataFieldNames, Object> totalMeta = totalExtractor.extractMetaData(rfq,session, trades);
+        Map<RfqMetadataFieldNames, Object> volumeMeta = volumeExtractor.extractMetaData(rfq,session, trades);
 
         //TODO: publish the metadata
+        MetadataJsonLogPublisher metadataPublish = new MetadataJsonLogPublisher();
+        metadataPublish.publishMetadata(totalMeta);
+        metadataPublish.publishMetadata(volumeMeta);
     }
 }
