@@ -22,24 +22,19 @@ public class TradeDataLoader {
         StructType schema = new StructType(new StructField[]{
                 DataTypes.createStructField("TraderId", LongType,false),
                 DataTypes.createStructField("EntityId", LongType,false),
-                DataTypes.createStructField("SecurityID", StringType,false),
-                DataTypes.createStructField("LastQty", LongType,false),
-                DataTypes.createStructField("LastPx", DoubleType,false),
-                DataTypes.createStructField("TradeDate", DateType,false),
-                DataTypes.createStructField("Currency", StringType,false),
-
                 DataTypes.createStructField("MsgType", LongType,false),
                 DataTypes.createStructField("TradeReportId", LongType,false),
                 DataTypes.createStructField("PreviouslyReported", StringType,false),
-
+                DataTypes.createStructField("SecurityID", StringType,false),
                 DataTypes.createStructField("SecurityIdSource", LongType,false),
-
-
+                DataTypes.createStructField("LastQty", LongType,false),
+                DataTypes.createStructField("LastPx", DoubleType,false),
+                DataTypes.createStructField("TradeDate", DateType,false),
                 DataTypes.createStructField("TransactTime", StringType,false),
                 DataTypes.createStructField("NoSides", IntegerType,false),
                 DataTypes.createStructField("Side", IntegerType,false),
-                DataTypes.createStructField("OrderID", LongType,false)
-
+                DataTypes.createStructField("OrderID", LongType,false),
+                DataTypes.createStructField("Currency", StringType,false)
         });
 
 
