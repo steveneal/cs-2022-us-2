@@ -8,4 +8,6 @@ public enum RfqMetadataFieldNames {
     tradesWithEntityPastWeek,
     tradesWithEntityPastYear,
     volumeTradedYearToDate,
+    //add new field for month
+    tradesWithEntityPastMonth,
 }
