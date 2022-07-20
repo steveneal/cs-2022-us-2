@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class VolumeTradedWithEntityYTDExtractorTest extends AbstractSparkUnitTest {
+public class VolumeTradedWithInstrumentExtractorTest extends AbstractSparkUnitTest {
 
     private Rfq rfq;
     Dataset<Row> trades;
@@ -19,8 +19,8 @@ public class VolumeTradedWithEntityYTDExtractorTest extends AbstractSparkUnitTes
     @BeforeEach
     public void setup() {
         rfq = new Rfq();
-        rfq.setEntityId(5561279226039690843L);
-        rfq.setIsin("AT0000A0VRQ6");
+        rfq.setTraderId(6915717929522265936L);
+        rfq.setIsin("AT0000A001X2");
 
         String filePath = "src/test/resources/trades/trades.json";
         trades = new TradeDataLoader().loadTrades(session, filePath);
@@ -29,28 +29,28 @@ public class VolumeTradedWithEntityYTDExtractorTest extends AbstractSparkUnitTes
     @Test
     public void checkVolumeWhenAllTradesMatch() {
 
-        VolumeTradedWithEntityYTDExtractor extractor = new VolumeTradedWithEntityYTDExtractor();
+        VolumeTradedWithInstrumentExtractor extractor = new VolumeTradedWithInstrumentExtractor();
         extractor.setSince("2018-01-01");
 
         Map<RfqMetadataFieldNames, Object> meta = extractor.extractMetaData(rfq, session, trades);
 
-        Object result = meta.get(RfqMetadataFieldNames.volumeTradedYearToDate);
+        Object result = meta.get(RfqMetadataFieldNames.volumeTradedYearToDateIn);
 
-        assertEquals(21100000L, result);
+        assertEquals(2900000L, result);
     }
 
     @Test
     public void checkVolumeWhenNoTradesMatch() {
 
         //all test trade data are for 2018 so this will cause no matches
-        VolumeTradedWithEntityYTDExtractor extractor = new VolumeTradedWithEntityYTDExtractor();
+        VolumeTradedWithInstrumentExtractor extractor = new VolumeTradedWithInstrumentExtractor();
         extractor.setSince("2019-01-01");
 
         Map<RfqMetadataFieldNames, Object> meta = extractor.extractMetaData(rfq, session, trades);
 
-        Object result = meta.get(RfqMetadataFieldNames.volumeTradedYearToDate);
+        Object result = meta.get(RfqMetadataFieldNames.volumeTradedYearToDateIn);
 
-        assertEquals(21100000L, result);
+        assertEquals(2900000L, result);
     }
 
 }

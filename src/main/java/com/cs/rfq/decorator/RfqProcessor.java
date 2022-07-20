@@ -1,9 +1,6 @@
 package com.cs.rfq.decorator;
 
-import com.cs.rfq.decorator.extractors.RfqMetadataExtractor;
-import com.cs.rfq.decorator.extractors.RfqMetadataFieldNames;
-import com.cs.rfq.decorator.extractors.TotalTradesWithEntityExtractor;
-import com.cs.rfq.decorator.extractors.VolumeTradedWithEntityYTDExtractor;
+import com.cs.rfq.decorator.extractors.*;
 import com.cs.rfq.decorator.publishers.MetadataJsonLogPublisher;
 import com.cs.rfq.decorator.publishers.MetadataPublisher;
 import org.apache.spark.api.java.function.Function;
@@ -67,13 +64,19 @@ public class RfqProcessor {
         //TODO: get metadata from each of the extractors
         RfqMetadataExtractor totalExtractor = new TotalTradesWithEntityExtractor();
         RfqMetadataExtractor volumeExtractor = new TotalTradesWithEntityExtractor();
+        RfqMetadataExtractor totalInstrumentExtractor = new TotalTradesForInstrumentExtractor();
+        RfqMetadataExtractor volumeInstrumentExtractor = new VolumeTradedWithInstrumentExtractor();
 
         Map<RfqMetadataFieldNames, Object> totalMeta = totalExtractor.extractMetaData(rfq,session, trades);
         Map<RfqMetadataFieldNames, Object> volumeMeta = volumeExtractor.extractMetaData(rfq,session, trades);
+        Map<RfqMetadataFieldNames, Object> totalInstrumentMeta = totalInstrumentExtractor.extractMetaData(rfq,session, trades);
+        Map<RfqMetadataFieldNames, Object> volumeInstrumentMeta = volumeInstrumentExtractor.extractMetaData(rfq,session, trades);
 
         //TODO: publish the metadata
         MetadataJsonLogPublisher metadataPublish = new MetadataJsonLogPublisher();
         metadataPublish.publishMetadata(totalMeta);
         metadataPublish.publishMetadata(volumeMeta);
+        metadataPublish.publishMetadata(totalInstrumentMeta);
+        metadataPublish.publishMetadata(volumeInstrumentMeta);
     }
 }
