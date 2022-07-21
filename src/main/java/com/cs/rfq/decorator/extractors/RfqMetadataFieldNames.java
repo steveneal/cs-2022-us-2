@@ -11,6 +11,8 @@ public enum RfqMetadataFieldNames {
     volumeBoughtForInstrument,
     volumeSoldForInstrument,
     tradesWithEntityPastMonth,
+    tradeSideBiasMonthtoDate,
+    tradeSideBiasWeektoDate,
     //add new fields for Instrument trades
 
     tradesForInstrumentToday,

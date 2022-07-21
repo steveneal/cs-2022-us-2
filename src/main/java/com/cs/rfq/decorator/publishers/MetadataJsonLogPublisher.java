@@ -2,6 +2,7 @@ package com.cs.rfq.decorator.publishers;
 
 import com.cs.rfq.decorator.extractors.RfqMetadataFieldNames;
 import com.google.gson.GsonBuilder;
+import org.apache.spark.sql.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,5 +16,7 @@ public class MetadataJsonLogPublisher implements MetadataPublisher {
     public void publishMetadata(Map<RfqMetadataFieldNames, Object> metadata) {
         String s = new GsonBuilder().setPrettyPrinting().create().toJson(metadata);
         log.info(String.format("Publishing metadata:%n%s", s));
+
+
     }
 }

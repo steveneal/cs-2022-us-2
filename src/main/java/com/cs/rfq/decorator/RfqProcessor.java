@@ -50,6 +50,7 @@ public class RfqProcessor {
         extractors.add(new TotalTradesForInstrumentExtractor());
         extractors.add(new VolumeTradedWithInstrumentExtractor());
         extractors.add(new AverageTradedPrice());
+        extractors.add(new TradeSideBias());
     }
 
     public void startSocketListener() throws InterruptedException {
