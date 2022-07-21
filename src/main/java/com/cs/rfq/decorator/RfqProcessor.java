@@ -1,6 +1,9 @@
 package com.cs.rfq.decorator;
 
-import com.cs.rfq.decorator.extractors.*;
+import com.cs.rfq.decorator.extractors.RfqMetadataExtractor;
+import com.cs.rfq.decorator.extractors.RfqMetadataFieldNames;
+import com.cs.rfq.decorator.extractors.TotalTradesWithEntityExtractor;
+import com.cs.rfq.decorator.extractors.VolumeTradedWithEntityYTDExtractor;
 import com.cs.rfq.decorator.publishers.MetadataJsonLogPublisher;
 import com.cs.rfq.decorator.publishers.MetadataPublisher;
 import org.apache.spark.api.java.function.Function;
@@ -13,7 +16,10 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.spark.sql.functions.sum;
 
@@ -46,6 +52,7 @@ public class RfqProcessor {
         extractors.add(new InstrumentLiquidityExtractor());
         extractors.add(new TotalTradesForInstrumentExtractor());
         extractors.add(new VolumeTradedWithInstrumentExtractor());
+        extractors.add(new AverageTradedPrice());
     }
 
     public void startSocketListener() throws InterruptedException {
