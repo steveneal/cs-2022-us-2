@@ -20,7 +20,7 @@ public class AverageTraderPriceTest extends AbstractSparkUnitTest{
         rfq = new Rfq();
         rfq.setEntityId(5561279226039690843L);
 
-        String filePath = "src/test/resources/trades/trades.json";
+        String filePath = getClass().getResource("volume-traded-1.json").getPath();
         trades = new TradeDataLoader().loadTrades(session, filePath);
     }
 
@@ -28,12 +28,12 @@ public class AverageTraderPriceTest extends AbstractSparkUnitTest{
     public void checkAverageWhenAllTradesMatch() {
 
         AverageTradedPrice extractor = new AverageTradedPrice();
-        extractor.setSince("2018-06-18");
+        extractor.setSince("2018-06-08");
 
         Map<RfqMetadataFieldNames, Object> meta = extractor.extractMetaData(rfq, session, trades);
 
         Object result = meta.get(RfqMetadataFieldNames.averageTradePrice);
-        assertEquals(128.14829666254656D, result);
+        assertEquals(138.4396D, result);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class AverageTraderPriceTest extends AbstractSparkUnitTest{
 
         Object result = meta.get(RfqMetadataFieldNames.averageTradePrice);
 
-        assertEquals(128.14829666254656D, result);
+        assertEquals(0, result);
     }
 
 }
