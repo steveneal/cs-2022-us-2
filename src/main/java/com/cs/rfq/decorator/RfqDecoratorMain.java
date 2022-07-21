@@ -28,7 +28,7 @@ public class RfqDecoratorMain {
         SparkConf conf = new SparkConf().setAppName("TradeDataPuller");
 
         //TODO: create a Spark streaming context
-        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));
+        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 
 
         //TODO: create a Spark session
@@ -40,8 +40,14 @@ public class RfqDecoratorMain {
         JavaDStream<String> stream = processor.initRfqStream();
 
         //.map(Rfq::fromJson)
+
+        RfqProcessor processorRfq = new RfqProcessor(session, jssc);
         stream.foreachRDD(rdd -> {
-                    rdd.collect().stream().forEach(System.out::println);
+                    rdd.collect().stream().map(r -> {
+                        Rfq rfq = Rfq.fromJson(r);
+                        processorRfq.processRfq(rfq);
+                        return rfq;
+                    }).forEach(System.out::println);
                 }
         );
 
