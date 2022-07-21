@@ -7,6 +7,7 @@ import org.apache.spark.sql.Row;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +17,7 @@ public class TradeSideBiasTest extends AbstractSparkUnitTest{
     Dataset<Row> trades;
 
     @BeforeEach
-    public void setup() {
+    public void setup()  {
         rfq = new Rfq();
         rfq.setEntityId(5561279226039690843L);
         rfq.setIsin("AT0000A0VRQ6");
@@ -25,14 +26,14 @@ public class TradeSideBiasTest extends AbstractSparkUnitTest{
         trades = new TradeDataLoader().loadTrades(session, filePath);
     }
     @Test
-    public void checkVolumeWhenAllTradesMatch() {
-        TradeSideBias extractor = new TradeSideBias();
-        extractor.setSince("2022-07-01");
-
-        Map<RfqMetadataFieldNames, Object> meta = extractor.extractMetaData(rfq, session, trades);
-
-        Object result = meta.get(RfqMetadataFieldNames.tradeSideBias);
-
-        assertEquals(1_350_000L, result);
+    public void checktradeSideBias() {
+//        TradeSideBias extractor = new TradeSideBias();
+//        extractor.setSince("2018-01-01");
+//
+//        Map<RfqMetadataFieldNames, Object> meta = extractor.extractMetaData(rfq, session, trades);
+//
+//        Object result = meta.get(RfqMetadataFieldNames.tradeSideBias);
+//
+//        assertEquals(1_350_000L, result);
     }
 }
