@@ -17,7 +17,7 @@ public class Rfq implements Serializable {
     private String side;
 
     public static Rfq fromJson(String json) {
-
+        System.out.println(json);
         //Create a new RFQ data object to return
         Rfq newRfq = new Rfq();
 
