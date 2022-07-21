@@ -15,7 +15,13 @@ public class MetadataJsonLogPublisher implements MetadataPublisher {
     @Override
     public void publishMetadata(Map<RfqMetadataFieldNames, Object> metadata) {
         String s = new GsonBuilder().setPrettyPrinting().create().toJson(metadata);
-        log.info(String.format("Publishing metadata:%n%s", s));
+
+        try{
+            KafkaPublisher.runProducer(String.format("Publishing metadata:%n%s", s));
+            log.info(String.format("Publishing metadata:%n%s", s));
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
 
     }
