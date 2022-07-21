@@ -43,6 +43,9 @@ public class RfqProcessor {
         //TODO: take a close look at how these two extractors are implemented
         extractors.add(new TotalTradesWithEntityExtractor());
         extractors.add(new VolumeTradedWithEntityYTDExtractor());
+        extractors.add(new InstrumentLiquidityExtractor());
+        extractors.add(new TotalTradesForInstrumentExtractor());
+        extractors.add(new VolumeTradedWithInstrumentExtractor());
     }
 
     public void startSocketListener() throws InterruptedException {
@@ -62,21 +65,9 @@ public class RfqProcessor {
         Map<RfqMetadataFieldNames, Object> metadata = new HashMap<>();
 
         //TODO: get metadata from each of the extractors
-        RfqMetadataExtractor totalExtractor = new TotalTradesWithEntityExtractor();
-        RfqMetadataExtractor volumeExtractor = new TotalTradesWithEntityExtractor();
-        RfqMetadataExtractor totalInstrumentExtractor = new TotalTradesForInstrumentExtractor();
-        RfqMetadataExtractor volumeInstrumentExtractor = new VolumeTradedWithInstrumentExtractor();
-
-        Map<RfqMetadataFieldNames, Object> totalMeta = totalExtractor.extractMetaData(rfq,session, trades);
-        Map<RfqMetadataFieldNames, Object> volumeMeta = volumeExtractor.extractMetaData(rfq,session, trades);
-        Map<RfqMetadataFieldNames, Object> totalInstrumentMeta = totalInstrumentExtractor.extractMetaData(rfq,session, trades);
-        Map<RfqMetadataFieldNames, Object> volumeInstrumentMeta = volumeInstrumentExtractor.extractMetaData(rfq,session, trades);
-
-        //TODO: publish the metadata
         MetadataJsonLogPublisher metadataPublish = new MetadataJsonLogPublisher();
-        metadataPublish.publishMetadata(totalMeta);
-        metadataPublish.publishMetadata(volumeMeta);
-        metadataPublish.publishMetadata(totalInstrumentMeta);
-        metadataPublish.publishMetadata(volumeInstrumentMeta);
+        for(RfqMetadataExtractor ex: extractors){
+            metadataPublish.publishMetadata(ex.extractMetaData(rfq, session, trades));
+        }
     }
 }
