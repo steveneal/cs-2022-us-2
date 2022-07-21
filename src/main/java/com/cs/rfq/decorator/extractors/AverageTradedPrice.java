@@ -15,14 +15,14 @@ public class AverageTradedPrice implements RfqMetadataExtractor{
 
     private String since;
     public AverageTradedPrice() {
-        this.since = DateTime.now().getWeekOfWeekyear() + "-01-01";
+        this.since = DateTime.now().minusWeeks(1).toString().substring(0,10);
     }
 
     @Override
     public Map<RfqMetadataFieldNames, Object> extractMetaData(Rfq rfq, SparkSession session, Dataset<Row> trades) {
 
-        long todayMs = DateTime.now().withMillisOfDay(0).getMillis();
-        long pastWeekMs = DateTime.now().withMillis(todayMs).minusWeeks(1).getMillis();
+       // long todayMs = DateTime.now().withMillisOfDay(0).getMillis();
+        //long pastWeekMs = DateTime.now().withMillis(todayMs).minusWeeks(1).getMillis();
 
         String query = String.format("SELECT avg(LastPx) from trade where EntityId='%s' AND TradeDate >= '%s'",
                 rfq.getEntityId(),
