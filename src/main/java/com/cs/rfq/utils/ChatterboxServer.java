@@ -18,7 +18,7 @@ public class ChatterboxServer {
     //monitors SERVER_PORT_OUT for socket closing
     private static Thread rfqSenderInputThread;
 
-    //{ 'id': 931544593154445, 'traderId': 3351266293154445953, 'entityId': 5561279226039690843, 'instrumentId': 'AT0000383864', 'qty': 25000, 'price': 1.58, 'side': 'B'}
+    //{ 'id': 931544593154445, 'traderId': 7514623710987345033, 'entityId': 5561279226039690843, 'instrumentId': 'AT0000A10683', 'qty': 25000, 'price': 1.58, 'side': 'B'}
     public static void main(String[] args) throws Exception {
         runSender();
         runReceiver();
