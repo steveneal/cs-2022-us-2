@@ -47,7 +47,7 @@ public class AverageTraderPriceTest extends AbstractSparkUnitTest{
 
         Object result = meta.get(RfqMetadataFieldNames.averageTradePrice);
 
-        assertEquals(0, result);
+        assertEquals(0L, result);
     }
 
 }
